@@ -9,7 +9,7 @@ router.use(cors());
 
 // router.route("/:movieId/theaters").get(controller.readTheaters).all(methodNotAllowed)
 
-// router.route("/:movieId").get(controller.readMovies).all(methodNotAllowed)
+router.route("/:movieId").get(controller.readMovies).all(methodNotAllowed)
 
 router.route("/").get(controller.list).all(methodNotAllowed)
 
