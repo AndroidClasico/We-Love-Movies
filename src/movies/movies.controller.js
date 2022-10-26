@@ -20,9 +20,9 @@ async function list(req, res) {
   res.json({ data });
 }
 
-async function readMovies(req, res) {
-  const data = res.locals.movie;
-  res.json({ data });
+async function readMovies(req, res, next) {
+  const data = await service.readMovie(res.locals.movie.movie_id);
+  res.json({ data: res.locals.movie.movie_id });
 }
 
 async function readTheaters(req, res) {

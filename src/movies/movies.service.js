@@ -3,9 +3,11 @@ const mapProperties = require("../utils/map-properties");
 
 const addCritic = mapProperties({
     critic_id: "critic.critic_id",
-    surname: "critic_id.surname"
-    
-
+    preferred_name:"critic.preferred_name",
+    surname: "critic_id.surname",
+    organization_name: "critic.organization_name",
+    //created at
+    //updated at
 })
 
 function list(is_showing) {
