@@ -2,16 +2,16 @@ const service = require("./movies.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function movieExists(req, res, next) {
-  const foundMovie = await service.readMovie(res.locals.movie.movie_id);
-  res.json({ foundUser });
-
-  if (foundMovie) {
-    res.locals.movie = foundMovie;
+  const {movieId} = req.params
+  const movie = await service.readMovie(movieId);
+ 
+  if (movie) {
+    res.locals.movie = movie;
     return next();
   }
   next({
     status: 400,
-    message: `Movie id not found`,
+    message: `Movie cannot be found`,
   });
 }
 
@@ -20,9 +20,9 @@ async function list(req, res) {
   res.json({ data });
 }
 
-async function readMovies(req, res, next) {
-  const data = await service.readMovie(res.locals.movie.movie_id);
-  res.json({ data: res.locals.movie.movie_id });
+async function readMovie(req, res) {
+  console.log("line 24 controller.js: ", res.locals.movie);
+  res.json({ data: res.locals.movie });
 }
 
 async function readTheaters(req, res) {
@@ -30,8 +30,14 @@ async function readTheaters(req, res) {
   res.json({ data });
 }
 
+async function readReviews(req, res) {
+  const data = await service.readReviews(res.locals.movie.movie_id);
+  res.json({ data });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
-  readTheaters: [asyncErrorBoundary(movieExists), readTheaters],
-  readMovies: [asyncErrorBoundary(movieExists), readMovies],
+  readMovie: [asyncErrorBoundary(movieExists), asyncErrorBoundary(readMovie)],
+  readTheaters: [asyncErrorBoundary(movieExists),  asyncErrorBoundary(readTheaters)],
+  readReviews: [asyncErrorBoundary(movieExists),  asyncErrorBoundary(readReviews)],
 };
