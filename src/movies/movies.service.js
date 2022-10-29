@@ -25,19 +25,17 @@ function readMovie(movieId) {
 
 function readTheaters(movieId) {
   //needs a join
-  return knex("theater as t")
-    .join("movies_theaters as mt", "t.theater_id", "mt.theater_id")
-    .select("t.*")
-    .where({ movie_id: movieId, is_showing: true })
-    .groupBy("t.theater_id")
-    .orderBy("t.theater_id");
+  return knex("movies_theaters as mt")
+    .join("theaters as t", "t.theater_id", "mt.theater_id")
+    .select("t.*", "mt.*")
+    .where({ "mt.movie_id": movieId });
 }
 
-function readReviews(reviewId) {
+function readReviews(movieId) {
   return knex("reviews as r")
     .join("critics as c", "r.critic_id", "c.critic_id")
-    .select("*")
-    .where({ review_id: reviewId })
+    .select("r.*", "c.*")
+    .where({ "r.movie_id": movieId })
     .then((data) => data.map(addCritic));
 }
 
