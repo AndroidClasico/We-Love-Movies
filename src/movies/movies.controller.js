@@ -32,6 +32,7 @@ async function readTheaters(req, res) {
 
 async function readReviews(req, res) {
   const data = await service.readReviews(res.locals.movie.movie_id);
+  console.log(data)
   res.json({ data });
 }
 

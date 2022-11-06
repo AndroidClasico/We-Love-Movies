@@ -1,6 +1,9 @@
 const reviewsService = require("./reviews.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
+async function listReviews(req, res, next) {
+  reviewsService.list().then((review) => console.log(review));
+}
 // next({ status: 404, message: `Supplier cannot be found.` });
 async function reviewExists(req, res, next) {
   reviewsService
@@ -16,24 +19,26 @@ async function reviewExists(req, res, next) {
 }
 
 async function update(req, res, next) {
+  console.log("how is this undefined", req.body);
+  console.log("the id", res.locals.review.review_id);
+  
   const updatedReview = {
-    ...req.body.data,
+    ...req.body,
     review_id: res.locals.review.review_id,
+    // params.reviewId
   };
-  reviewsService
-    .update(updatedReview)
-    .then((data) => res.json({ data }))
-    .catch(next);
+  const data = await reviewsService.update(updatedReview);
+  res.json({ data });
 }
 
 async function destroy(req, res, next) {
-  reviewsService
-    .delete(res.locals.review.review_id)
-    .then(() => res.sendStatus(204))
-    .catch(next);
+  const { review } = res.locals;
+  await reviewsService.delete(review.review_id);
+  res.sendStatus(204);
 }
 
 module.exports = {
+  listReviews: [asyncErrorBoundary(listReviews)],
   delete: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(destroy)],
   update: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(update)],
 };

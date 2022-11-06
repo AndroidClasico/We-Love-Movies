@@ -33,11 +33,11 @@ function readTheaters(movieId) {
 
 function readReviews(movieId) {
   return knex("reviews as r")
-    .join("movies as m", "r.movie_id", "m.movie_id")
     .join("critics as c", "r.critic_id", "c.critic_id")
     .select("r.*", "c.*")
     .where({ "r.movie_id": movieId })
-    .then((data) => data.map(addCritic));
+    .first()
+    .then(addCritic);
 }
 
 module.exports = {

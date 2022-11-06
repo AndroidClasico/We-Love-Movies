@@ -13,6 +13,10 @@ function read(reviewId) {
   return knex("reviews").select("*").where({ review_id: reviewId }).first();
 }
 
+function list(){
+    return knex("reviews")
+        .select("*")
+}
 function update(updatedReview) {
   return knex("reviews")
     .select("*")
@@ -31,6 +35,7 @@ function destroy(reviewId) {
 // }
 
 module.exports = {
+    list, 
     read,
     update,
     delete: destroy,

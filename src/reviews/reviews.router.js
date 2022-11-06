@@ -5,9 +5,11 @@ const cors = require("cors");
 
 router.use(cors());
 
+router.route("/").get(controller.listReviews)
+
 router
   .route("/:reviewId")
-  .patch(controller.update)
+  .put(controller.update)
   .delete(controller.delete)
   .all(methodNotAllowed);
 
