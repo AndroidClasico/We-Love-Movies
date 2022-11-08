@@ -4,10 +4,8 @@ const mapProperties = require("../utils/map-properties");
 const addCritic = mapProperties({
   critic_id: "critic.critic_id",
   preferred_name: "critic.preferred_name",
-  surname: "critic_id.surname",
+  surname: "critic.surname",
   organization_name: "critic.organization_name",
-  created_at: ["critics", null, "created_at"],
-  updated_at: ["critics", null, "updated_at"],
 });
 
 function list(is_showing) {
@@ -34,10 +32,16 @@ function readTheaters(movieId) {
 function readReviews(movieId) {
   return knex("reviews as r")
     .join("critics as c", "r.critic_id", "c.critic_id")
-    .select("r.*", "c.*")
-    .where({ "r.movie_id": movieId })
-    .first()
-    .then(addCritic);
+    .select("*")
+    .where({ movie_id: movieId })
+    .then((reviews) => {
+      const reviewsWithCritic = [];
+      reviews.forEach((review) => {
+        const addedCritic = addCritic(review);
+        reviewsWithCritic.push(addedCritic);
+      });
+      return reviewsWithCritic;
+    });
 }
 
 module.exports = {

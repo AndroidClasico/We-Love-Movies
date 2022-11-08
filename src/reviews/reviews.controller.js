@@ -21,14 +21,17 @@ async function reviewExists(req, res, next) {
 async function update(req, res, next) {
   console.log("how is this undefined", req.body);
   console.log("the id", res.locals.review.review_id);
-  
+  const reviewId = res.locals.review.review_id // get review id
   const updatedReview = {
     ...req.body,
-    review_id: res.locals.review.review_id,
+    review_id: reviewId,
     // params.reviewId
   };
-  const data = await reviewsService.update(updatedReview);
-  res.json({ data });
+  await reviewsService.update(updatedReview); // update review
+  const criticUpdata = await reviewsService.updateCritic(reviewId); // get updated review
+  console.log("criticUpdata :", criticUpdata)
+   const data = { ...criticUpdata, created_at, updated_at} // create response object
+  res.json({ data }); // send response
 }
 
 async function destroy(req, res, next) {
