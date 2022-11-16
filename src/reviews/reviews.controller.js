@@ -19,18 +19,15 @@ async function reviewExists(req, res, next) {
 }
 
 async function update(req, res, next) {
-  console.log("how is this undefined", req.body);
-  console.log("the id", res.locals.review.review_id);
-  const reviewId = res.locals.review.review_id // get review id
+  const reviewId = res.locals.review.review_id; // get review id
   const updatedReview = {
-    ...req.body,
+    ...req.body.data,
     review_id: reviewId,
     // params.reviewId
   };
   await reviewsService.update(updatedReview); // update review
   const criticUpdata = await reviewsService.updateCritic(reviewId); // get updated review
-  console.log("criticUpdata :", criticUpdata)
-   const data = { ...criticUpdata} // create response object
+  const data = { ...criticUpdata }; // create response object
   res.json({ data }); // send response
 }
 
